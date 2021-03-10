@@ -22,7 +22,7 @@ public class main {
     text = letter.nextLine();
     int letters;
     letters = text.length();
-    System.out.println("La el texto ingresado tiene un tamaño de: " + letters + "  caracteres.");
+    System.out.println("El texto ingresado tiene un tamaño de: " + letters + "  caracteres.");
     break;
    case 2:
     System.out.println("SUBCADENA");
@@ -126,7 +126,7 @@ public class main {
        break;
       default:
        System.out.println("la opcion ingresada no es valida");
-
+break;
 
      }
    }
