@@ -68,8 +68,6 @@ public class formNecflis extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         txtNombrePelicula = new javax.swing.JTextField();
-        txtTipo = new javax.swing.JTextField();
-        txtGenero = new javax.swing.JTextField();
         txtNoPelicula = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtSinopsis = new javax.swing.JTextArea();
@@ -77,6 +75,8 @@ public class formNecflis extends javax.swing.JFrame {
         TablaPeliculas = new javax.swing.JTable();
         btnCrearPelicula = new javax.swing.JButton();
         btnListaPeliculas = new javax.swing.JButton();
+        ComboTipo = new javax.swing.JComboBox<>();
+        ComboGenero = new javax.swing.JComboBox<>();
         jPanel3 = new javax.swing.JPanel();
         txtNoSeleccion = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
@@ -233,12 +233,6 @@ public class formNecflis extends javax.swing.JFrame {
             }
         });
 
-        txtTipo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtTipoActionPerformed(evt);
-            }
-        });
-
         txtSinopsis.setColumns(20);
         txtSinopsis.setRows(5);
         jScrollPane1.setViewportView(txtSinopsis);
@@ -271,6 +265,15 @@ public class formNecflis extends javax.swing.JFrame {
             }
         });
 
+        ComboTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Serie", "Pelicula" }));
+
+        ComboGenero.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Drama", "Comedia", "Terror", "Suspenso" }));
+        ComboGenero.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ComboGeneroActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -278,11 +281,11 @@ public class formNecflis extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap(183, Short.MAX_VALUE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnCrearPelicula)
-                        .addGap(47, 47, 47)
+                        .addGap(61, 61, 61)
                         .addComponent(btnListaPeliculas)
-                        .addGap(37, 37, 37))
+                        .addGap(74, 74, 74))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -292,13 +295,14 @@ public class formNecflis extends javax.swing.JFrame {
                             .addComponent(jLabel6)
                             .addComponent(jLabel10))
                         .addGap(27, 27, 27)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(txtTipo)
-                            .addComponent(txtGenero, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 351, Short.MAX_VALUE)
-                            .addComponent(txtNoPelicula, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtNombrePelicula))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 351, Short.MAX_VALUE)
+                                .addComponent(txtNoPelicula, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(txtNombrePelicula))
+                            .addComponent(ComboTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ComboGenero, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)))
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 558, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -317,11 +321,11 @@ public class formNecflis extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel7)
-                            .addComponent(txtTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(ComboTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel8)
-                            .addComponent(txtGenero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(ComboGenero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -331,7 +335,7 @@ public class formNecflis extends javax.swing.JFrame {
                             .addComponent(jLabel10)
                             .addComponent(txtNoPelicula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnListaPeliculas)
                             .addComponent(btnCrearPelicula)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -557,20 +561,16 @@ public class formNecflis extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNombrePeliculaActionPerformed
 
-    private void txtTipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTipoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtTipoActionPerformed
-
     private void btnCrearPeliculaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearPeliculaActionPerformed
 
         // TODO add your handling code here:
         
-               if(txtNombrePelicula.getText().isEmpty()|| txtTipo.getText().isEmpty()||txtGenero.getText().isEmpty()||txtSinopsis.getText().isEmpty()){
+               if(txtNombrePelicula.getText().isEmpty()|| ComboTipo.getSelectedItem().toString().isEmpty()||ComboGenero.getSelectedItem().toString().isEmpty()||txtSinopsis.getText().isEmpty()){
         JOptionPane.showMessageDialog(this,"Los datos ingresados estan incompletos");
             }else{
         cont2++;
         txtNoPelicula.setText(Integer.toString(cont2));
-        Peliculas Pelicula = new Peliculas(txtNombrePelicula.getText(), txtTipo.getText(),txtGenero.getText(), txtSinopsis.getText(),cont2);
+        Peliculas Pelicula = new Peliculas(txtNombrePelicula.getText(),ComboTipo.getSelectedItem().toString(),ComboGenero.getSelectedItem().toString(), txtSinopsis.getText(),cont2);
         listaPeliculas.add(Pelicula);
         contenidoP();
         JOptionPane.showMessageDialog(this,"La pelicula a  ha sido Registrada con Exito!!");
@@ -652,6 +652,10 @@ public class formNecflis extends javax.swing.JFrame {
         mostrar();
         
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void ComboGeneroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComboGeneroActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ComboGeneroActionPerformed
      
     
     
@@ -731,6 +735,8 @@ TablaPeliculas.setModel(new javax.swing.table.DefaultTableModel(
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> ComboGenero;
+    private javax.swing.JComboBox<String> ComboTipo;
     private javax.swing.JTable TablaClientes2;
     private javax.swing.JTable TablaPeliculas;
     private javax.swing.JTable TablaPeliculas2;
@@ -770,7 +776,6 @@ TablaPeliculas.setModel(new javax.swing.table.DefaultTableModel(
     private javax.swing.JTextField txtAgregarPlay;
     private javax.swing.JTextField txtDireccion;
     private javax.swing.JTextField txtEdad;
-    private javax.swing.JTextField txtGenero;
     private javax.swing.JTextArea txtList;
     private javax.swing.JTextField txtNoCliente;
     private javax.swing.JTextField txtNoPelicula;
@@ -779,6 +784,5 @@ TablaPeliculas.setModel(new javax.swing.table.DefaultTableModel(
     private javax.swing.JTextField txtNombrePelicula;
     private javax.swing.JTextArea txtSeleccion;
     private javax.swing.JTextArea txtSinopsis;
-    private javax.swing.JTextField txtTipo;
     // End of variables declaration//GEN-END:variables
 }
