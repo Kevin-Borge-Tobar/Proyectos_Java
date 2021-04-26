@@ -576,8 +576,6 @@ public class formNecflis extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this,"La pelicula a  ha sido Registrada con Exito!!");
         
         txtNombrePelicula.setText("");
-        txtTipo.setText("");
-        txtGenero.setText("");
         txtSinopsis.setText("");
         txtNoPelicula.setText("");
         }
