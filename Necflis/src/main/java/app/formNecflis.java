@@ -1,38 +1,270 @@
 /*
+
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package app;
 
+import java.sql.Connection;
+
+import java.sql.Statement;
+import java.sql.PreparedStatement;
+
+import java.sql.*;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Kevin Borge
  */
 public class formNecflis extends javax.swing.JFrame {
-    int cont = 0;   // se crea el contador de clientes dentro del progrma
-    ArrayList <Clientes> lista=new ArrayList<Clientes>(); //Se crea el array que guarda los datos de los clientes:  
- int cont2 = 0; //se crea el contador de las pelicualas
- ArrayList <Peliculas> listaPeliculas=new ArrayList<Peliculas>();
-  String matrizPlayList [][] = new String [10000][10000];
- int j = 0;
- int z = 0;
- int w = 0;
- int j1 = 0;
- int cont3= 0;
- int cont4 = 0;
- int pl = 0;
- int z2 = 0;
- String resultado = "";
+
+    MySqlConnector conector = new MySqlConnector();
+    Connection con1 = conector.conectar();
+
+  
+
     /**
      * Creates new form formNecflis
      */
+
+    public void limpiar() {
+        txtNombre.setText("");
+        txtDireccion.setText("");
+        txtEdad.setText("");
+        txtNoCliente.setText("");
+ 
+    }
+
+    public void guardarCliente() {
+        try {
+            Clientes cliente = new Clientes();
+            cliente.setNombre(txtNombre.getText());
+            cliente.setDireccion(txtDireccion.getText());
+            cliente.setEdad(txtEdad.getText());
+            
+            
+            PreparedStatement pst = con1.prepareStatement("INSERT INTO clientes(Nombre,Direccion,Edad) VALUES (?,?,?)");
+            pst.setString(1, cliente.getNombre());
+            pst.setString(2, cliente.getDireccion());
+            pst.setString(3, cliente.getEdad());
+            
+            pst.execute();
+            JOptionPane.showMessageDialog(null, "Cliente Ingresado con Exito!!");
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al Guardar Cliente");
+        }
+
+    }
+    
+    public void modificarCliente(){
+         try {
+            Clientes cliente   = new Clientes();
+            cliente.setNombre(txtNombre.getText());
+            cliente.setDireccion(txtDireccion.getText());
+            cliente.setEdad(txtEdad.getText());
+            int fila = tablaClientes.getSelectedRow();
+             String noCliente = tablaClientes.getValueAt(fila, 0).toString();
+            
+            //UPDATE `personas` SET `Nombre` = 'maria' WHERE `personas`.`ID` = 4
+            PreparedStatement pst = con1.prepareStatement("UPDATE Clientes SET Nombre = ?,Direccion = ?,Edad = ?  WHERE clientes . No_cliente"+"="+ Integer.parseInt(noCliente)+"");
+            pst.setString(1, cliente.getNombre());
+            pst.setString(2, cliente.getDireccion());
+            pst.setString(3, cliente.getEdad());
+            pst.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Datos Actualizados!!");
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al Modificar los Datos!!!");
+        }
+
+    
+    }
+    
+    public void eliminarCliente(){
+  try {
+            Clientes cliente   = new Clientes();
+            cliente.setNombre(txtNombre.getText());
+            cliente.setDireccion(txtDireccion.getText());
+            int fila = tablaClientes.getSelectedRow();
+            String noCliente = tablaClientes.getValueAt(fila, 0).toString();
+            
+            //UPDATE `personas` SET `Nombre` = 'maria' WHERE `personas`.`ID` = 4
+            PreparedStatement pst = con1.prepareStatement("DELETE FROM Clientes WHERE Clientes . No_cliente"+"="+ Integer.parseInt(noCliente)+"");
+            pst.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Cliente Eliminado!!");
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Selecciona un Cliente!!!");
+        }
+
+  }
+
+         
+    //error en la tabla clientes corregir mañana
+    public void tablaClientes() {
+        try {
+            DefaultTableModel model = new DefaultTableModel();
+            tablaClientes.setModel(model);
+            tablaClientes2.setModel(model);
+
+            PreparedStatement ps = null;
+            ResultSet rs = null;
+            MySqlConnector conectorTC = new MySqlConnector();
+            Connection con2 = conectorTC.conectar();
+
+            String consulta = "SELECT No_Cliente,Nombre,Direccion,Edad FROM Clientes";
+            ps = con2.prepareStatement(consulta);
+            rs = ps.executeQuery();
+
+            ResultSetMetaData rsMD = rs.getMetaData();
+            int noColumnas = rsMD.getColumnCount();
+            model.addColumn("No. Cliente");
+            model.addColumn("Nombre");
+            model.addColumn("Direccion");
+            model.addColumn("Edad");
+
+            while (rs.next()) {
+                Object[] fila = new Object[noColumnas];
+                for (int i = 0; i < noColumnas; i++) {
+                    fila[i] = rs.getObject(i+1);
+
+                }
+                model.addRow(fila);
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al Cargar los Datos");
+        }
+    }
+   //FUNCIONES PELICULA
+    
+    public void limpiarPelicula() {
+        txtNombrePelicula.setText("");
+        txtSinopsis.setText("");
+ 
+    }
+
+    public void guardarPelicula() {
+        try {
+            Peliculas pelicula = new Peliculas();
+            pelicula.setNombre(txtNombrePelicula.getText());
+            pelicula.setTipo(comboTipo.getSelectedItem().toString());
+            pelicula.setGenero(ComboGenero.getSelectedItem().toString());
+            pelicula.setsinopsis(txtSinopsis.getText());
+            
+            
+            PreparedStatement pst = con1.prepareStatement("INSERT INTO peliculas(Nombre,Tipo,Genero,Sinopsis) VALUES (?,?,?,?)");
+            pst.setString(1, pelicula.getNombre());
+            pst.setString(2, pelicula.getTipo());
+            pst.setString(3, pelicula.getGenero());
+            pst.setString(4, pelicula.getsinopsis());
+            
+            
+            pst.execute();
+            JOptionPane.showMessageDialog(null, "pelicula Ingresada con Exito!!");
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al Guardar Pelicula");
+        }
+
+    }
+    
+    public void modificarPelicula(){
+         try {
+            Peliculas pelicula = new Peliculas();
+            pelicula.setNombre(txtNombrePelicula.getText());
+            pelicula.setTipo(comboTipo.getSelectedItem().toString());
+            pelicula.setGenero(ComboGenero.getSelectedItem().toString());
+            pelicula.setsinopsis(txtSinopsis.getText());
+
+            int fila = TablaPeliculas.getSelectedRow();
+            String noPelicula = TablaPeliculas.getValueAt(fila, 0).toString();
+            
+            //UPDATE `personas` SET `Nombre` = 'maria' WHERE `personas`.`ID` = 4
+            PreparedStatement pst = con1.prepareStatement("UPDATE peliculas SET Nombre = ?,Tipo = ?,Genero = ?, Sinopsis =?  WHERE peliculas . No_Pelicula"+"="+ Integer.parseInt(noPelicula)+"");
+            pst.setString(1, pelicula.getNombre());
+            pst.setString(2, pelicula.getTipo());
+            pst.setString(3, pelicula.getGenero());
+            pst.setString(4, pelicula.getsinopsis());
+            pst.executeUpdate();
+            
+            JOptionPane.showMessageDialog(null, "Datos  de Pelicula Actualizados!!");
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al Modificar los Datos!!!");
+        }
+
+    
+    }
+    
+    public void eliminarPelicula(){
+  try {
+            Peliculas pelicula   = new Peliculas();
+            pelicula.setNombre(txtNombrePelicula.getText());
+            pelicula.setsinopsis(txtSinopsis.getText());
+            int fila = tablaClientes.getSelectedRow();
+            String noPeliculas = tablaClientes.getValueAt(fila, 0).toString();
+            
+            //UPDATE `personas` SET `Nombre` = 'maria' WHERE `personas`.`ID` = 4
+            PreparedStatement pst = con1.prepareStatement("DELETE FROM peliculas WHERE peliculas . No_Peliculas"+"="+ Integer.parseInt(noPeliculas)+"");
+            pst.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Pelicula Eliminada!!");
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Selecciona una Pelicula!!!");
+        }
+    }
+  
+
+         
+    //error en la tabla clientes corregir mañana
+    public void tablaPeliculas() {
+        try {
+            DefaultTableModel model = new DefaultTableModel();
+            TablaPeliculas.setModel(model);
+            TablaPeliculas2.setModel(model);
+
+            PreparedStatement ps = null;
+            ResultSet rs = null;
+            MySqlConnector conectorTC = new MySqlConnector();
+            Connection con2 = conectorTC.conectar();
+
+            String consulta = "SELECT No_Pelicula,Nombre,Tipo,Genero,Sinopsis FROM peliculas";
+            ps = con2.prepareStatement(consulta);
+            rs = ps.executeQuery();
+
+            ResultSetMetaData rsMD = rs.getMetaData();
+            int noColumnas = rsMD.getColumnCount();
+            model.addColumn("No. Pelicula");
+            model.addColumn("Nombre");
+            model.addColumn("Tipo");
+            model.addColumn("Genero");
+            model.addColumn("Sinopsis");
+
+            while (rs.next()) {
+                Object[] fila = new Object[noColumnas];
+                for (int i = 0; i < noColumnas; i++) {
+                    fila[i] = rs.getObject(i+1);
+
+                }
+                model.addRow(fila);
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al Cargar Tablas de Peliculas");
+        }
+    }    
+    
     public formNecflis() {
        
         initComponents();
+        tablaClientes();
+        tablaPeliculas();
     }
 
     /**
@@ -61,6 +293,25 @@ public class formNecflis extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         txtNombre = new javax.swing.JTextField();
         txtDireccion = new javax.swing.JTextField();
+        btnModificar = new javax.swing.JButton();
+        btnEliminar = new javax.swing.JButton();
+        btnLimpiar = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        txtNoSeleccion = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
+        btnSeleccionar = new javax.swing.JButton();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        tablaClientes2 = new javax.swing.JTable();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        txtSeleccion = new javax.swing.JTextArea();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        TablaPeliculas2 = new javax.swing.JTable();
+        txtAgregarPlay = new javax.swing.JTextField();
+        btnAgregarPL = new javax.swing.JButton();
+        jScrollPane8 = new javax.swing.JScrollPane();
+        txtList = new javax.swing.JTextArea();
+        jLabel11 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
@@ -75,24 +326,11 @@ public class formNecflis extends javax.swing.JFrame {
         TablaPeliculas = new javax.swing.JTable();
         btnCrearPelicula = new javax.swing.JButton();
         btnListaPeliculas = new javax.swing.JButton();
-        ComboTipo = new javax.swing.JComboBox<>();
+        comboTipo = new javax.swing.JComboBox<>();
         ComboGenero = new javax.swing.JComboBox<>();
-        jPanel3 = new javax.swing.JPanel();
-        txtNoSeleccion = new javax.swing.JTextField();
-        jLabel12 = new javax.swing.JLabel();
-        btnSeleccionar = new javax.swing.JButton();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        TablaClientes2 = new javax.swing.JTable();
-        jScrollPane6 = new javax.swing.JScrollPane();
-        txtSeleccion = new javax.swing.JTextArea();
-        jScrollPane7 = new javax.swing.JScrollPane();
-        TablaPeliculas2 = new javax.swing.JTable();
-        txtAgregarPlay = new javax.swing.JTextField();
-        btnAgregarPL = new javax.swing.JButton();
-        jScrollPane8 = new javax.swing.JScrollPane();
-        txtList = new javax.swing.JTextArea();
-        jLabel11 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btnModificarPelicula = new javax.swing.JButton();
+        btnEliminarPelicula = new javax.swing.JButton();
+        btnEliminarPelicula1 = new javax.swing.JButton();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -109,14 +347,14 @@ public class formNecflis extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        btnNuevoC.setText("Nuevo Cliente");
+        btnNuevoC.setText("NUEVO");
         btnNuevoC.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNuevoCActionPerformed(evt);
             }
         });
 
-        btnListaClientes.setText("Lista de Clientes");
+        btnListaClientes.setText("LISTA DE CLIENTES");
         btnListaClientes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnListaClientesActionPerformed(evt);
@@ -140,6 +378,11 @@ public class formNecflis extends javax.swing.JFrame {
                 "No.: Cliente", "Nombre", "Dirrección", "Edad"
             }
         ));
+        tablaClientes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaClientesMouseClicked(evt);
+            }
+        });
         jScrollPane3.setViewportView(tablaClientes);
 
         jLabel3.setText("Edad");
@@ -150,18 +393,33 @@ public class formNecflis extends javax.swing.JFrame {
             }
         });
 
+        btnModificar.setText("ACTUALIZAR");
+        btnModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarActionPerformed(evt);
+            }
+        });
+
+        btnEliminar.setText("ELIMINAR");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
+
+        btnLimpiar.setText("LIMPIAR");
+        btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpiarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 199, Short.MAX_VALUE)
-                        .addComponent(btnNuevoC)
-                        .addGap(34, 34, 34)
-                        .addComponent(btnListaClientes)
-                        .addGap(84, 84, 84))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -179,10 +437,22 @@ public class formNecflis extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(txtNoCliente)
-                                    .addComponent(txtEdad))))
-                        .addGap(43, 43, 43)))
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 497, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21))
+                                    .addComponent(txtEdad)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                        .addComponent(btnNuevoC)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(btnModificar)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(btnEliminar)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(btnLimpiar)
+                                        .addGap(0, 21, Short.MAX_VALUE)))))
+                        .addGap(33, 33, 33))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(200, 200, 200)
+                        .addComponent(btnListaClientes)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 525, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -206,145 +476,26 @@ public class formNecflis extends javax.swing.JFrame {
                             .addComponent(jLabel4)
                             .addComponent(txtNoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnListaClientes)
-                            .addComponent(btnNuevoC)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnNuevoC)
+                            .addComponent(btnModificar)
+                            .addComponent(btnEliminar)
+                            .addComponent(btnLimpiar))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnListaClientes))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(47, 47, 47)
+                        .addContainerGap()
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 334, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(371, Short.MAX_VALUE))
+                .addContainerGap(186, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Clientes ", jPanel1);
 
-        jLabel6.setText("Nombre");
-
-        jLabel7.setText("Tipo");
-
-        jLabel8.setText("Genero");
-
-        jLabel9.setText("Sinopsis");
-
-        jLabel10.setText("No.: Pelicula");
-
-        txtNombrePelicula.addActionListener(new java.awt.event.ActionListener() {
+        txtNoSeleccion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNombrePeliculaActionPerformed(evt);
+                txtNoSeleccionActionPerformed(evt);
             }
         });
-
-        txtSinopsis.setColumns(20);
-        txtSinopsis.setRows(5);
-        jScrollPane1.setViewportView(txtSinopsis);
-
-        TablaPeliculas.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
-            },
-            new String [] {
-                "No.:  Pelicula", "Nombre", "Tipo", "Genero", "Sinopsis"
-            }
-        ));
-        TablaPeliculas.setName("TablaPeliculas"); // NOI18N
-        jScrollPane4.setViewportView(TablaPeliculas);
-
-        btnCrearPelicula.setText("Crear pelicula");
-        btnCrearPelicula.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCrearPeliculaActionPerformed(evt);
-            }
-        });
-
-        btnListaPeliculas.setText("Lista de Peliculas");
-        btnListaPeliculas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnListaPeliculasActionPerformed(evt);
-            }
-        });
-
-        ComboTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Serie", "Pelicula" }));
-
-        ComboGenero.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Drama", "Comedia", "Terror", "Suspenso" }));
-        ComboGenero.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ComboGeneroActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnCrearPelicula)
-                        .addGap(61, 61, 61)
-                        .addComponent(btnListaPeliculas)
-                        .addGap(74, 74, 74))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel9)
-                            .addComponent(jLabel8)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel10))
-                        .addGap(27, 27, 27)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 351, Short.MAX_VALUE)
-                                .addComponent(txtNoPelicula, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(txtNombrePelicula))
-                            .addComponent(ComboTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ComboGenero, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)))
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 558, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(58, 58, 58)
-                                .addComponent(jLabel6))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(txtNombrePelicula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel7)
-                            .addComponent(ComboTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel8)
-                            .addComponent(ComboGenero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel10)
-                            .addComponent(txtNoPelicula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnListaPeliculas)
-                            .addComponent(btnCrearPelicula)))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(40, 40, 40)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(335, Short.MAX_VALUE))
-        );
-
-        jTabbedPane1.addTab("Peliculas", jPanel2);
 
         jLabel12.setText("Ingrese el Numero del cliente");
 
@@ -360,7 +511,7 @@ public class formNecflis extends javax.swing.JFrame {
             }
         });
 
-        TablaClientes2.setModel(new javax.swing.table.DefaultTableModel(
+        tablaClientes2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -371,7 +522,7 @@ public class formNecflis extends javax.swing.JFrame {
                 "No.: Cliente", "Nombre", "Dirección", "Edad"
             }
         ));
-        jScrollPane5.setViewportView(TablaClientes2);
+        jScrollPane5.setViewportView(tablaClientes2);
 
         txtSeleccion.setColumns(20);
         txtSeleccion.setRows(5);
@@ -433,21 +584,21 @@ public class formNecflis extends javax.swing.JFrame {
                             .addComponent(btnAgregarPL, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(79, 79, 79)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 543, Short.MAX_VALUE)
-                    .addComponent(jScrollPane5))
-                .addGap(25, 25, 25))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 543, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(25, 25, 25))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 543, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 391, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
@@ -466,13 +617,188 @@ public class formNecflis extends javax.swing.JFrame {
                                 .addGap(163, 163, 163)
                                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(1, 1, 1)
-                        .addComponent(jScrollPane8)))
-                .addContainerGap())
+                        .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Seleccionar Cliente", jPanel3);
+
+        jLabel6.setText("Nombre");
+
+        jLabel7.setText("Tipo");
+
+        jLabel8.setText("Genero");
+
+        jLabel9.setText("Sinopsis");
+
+        jLabel10.setText("No.: Pelicula");
+
+        txtNombrePelicula.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNombrePeliculaActionPerformed(evt);
+            }
+        });
+
+        txtSinopsis.setColumns(20);
+        txtSinopsis.setRows(5);
+        jScrollPane1.setViewportView(txtSinopsis);
+
+        TablaPeliculas.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "No.:  Pelicula", "Nombre", "Tipo", "Genero", "Sinopsis"
+            }
+        ));
+        TablaPeliculas.setName("TablaPeliculas"); // NOI18N
+        TablaPeliculas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TablaPeliculasMouseClicked(evt);
+            }
+        });
+        jScrollPane4.setViewportView(TablaPeliculas);
+
+        btnCrearPelicula.setText("NUEVA PELICULA");
+        btnCrearPelicula.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCrearPeliculaActionPerformed(evt);
+            }
+        });
+
+        btnListaPeliculas.setText("Lista de Peliculas");
+        btnListaPeliculas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnListaPeliculasActionPerformed(evt);
+            }
+        });
+
+        comboTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Serie", "Pelicula" }));
+        comboTipo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboTipoActionPerformed(evt);
+            }
+        });
+
+        ComboGenero.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Drama", "Comedia", "Terror", "Suspenso" }));
+        ComboGenero.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ComboGeneroActionPerformed(evt);
+            }
+        });
+
+        btnModificarPelicula.setText("ACTUALIZAR");
+        btnModificarPelicula.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarPeliculaActionPerformed(evt);
+            }
+        });
+
+        btnEliminarPelicula.setText("ELIMINAR");
+        btnEliminarPelicula.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarPeliculaActionPerformed(evt);
+            }
+        });
+
+        btnEliminarPelicula1.setText("LIMPIAR");
+        btnEliminarPelicula1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarPelicula1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel9)
+                                    .addComponent(jLabel8)
+                                    .addComponent(jLabel7)
+                                    .addComponent(jLabel6)
+                                    .addComponent(jLabel10))
+                                .addGap(27, 27, 27)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 351, Short.MAX_VALUE)
+                                        .addComponent(txtNoPelicula, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(txtNombrePelicula))
+                                    .addComponent(comboTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(ComboGenero, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(btnCrearPelicula)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnModificarPelicula)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnEliminarPelicula)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnEliminarPelicula1))))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(165, 165, 165)
+                        .addComponent(btnListaPeliculas)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 558, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(58, 58, 58)
+                                .addComponent(jLabel6))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(txtNombrePelicula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel7)
+                            .addComponent(comboTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel8)
+                            .addComponent(ComboGenero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel10)
+                            .addComponent(txtNoPelicula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnCrearPelicula)
+                            .addComponent(btnModificarPelicula)
+                            .addComponent(btnEliminarPelicula)
+                            .addComponent(btnEliminarPelicula1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnListaPeliculas))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(40, 40, 40)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(114, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Peliculas", jPanel2);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -506,55 +832,14 @@ public class formNecflis extends javax.swing.JFrame {
         if(txtNombre.getText().isEmpty()||txtDireccion.getText().isEmpty()||txtEdad.getText().isEmpty()){
         JOptionPane.showMessageDialog(this,"Los datos ingresados estan incompletos");
         }else{
-                cont++;
-                txtNoCliente.setText(Integer.toString(cont));
-                Clientes Cliente = new Clientes(txtNombre.getText(),txtDireccion.getText(),txtEdad.getText(),cont);
-                lista.add(Cliente);
-                contenidoLista();
-                JOptionPane.showMessageDialog(this,"El  Cliente ha sido Registrado con Exito!!");
-
-                txtNombre.setText("");
-                txtDireccion.setText("");
-                txtEdad.setText("");
-                txtNoCliente.setText("");
+               guardarCliente();
+               limpiar();
+               tablaClientes();
                }
     }//GEN-LAST:event_btnNuevoCActionPerformed
 
-    public void contenidoLista(){
-        if(lista.size()!=0){
-            String matriz [][]= new String[lista.size()][4];
-    
-    for(int i = 0; i < lista.size(); i++){
-    matriz [i][0]= Integer.toString(lista.get(i).getNoCliente());
-    matriz [i][1]= lista.get(i).getNombre();
-    matriz [i][2]= lista.get(i).getDireccion();
-    matriz [i][3]= lista.get(i).getEdad();
-    
-    }
-    // Aca se muestra la tabla de los clientes activos en el sistema
-     tablaClientes.setModel(new javax.swing.table.DefaultTableModel(
-           matriz,
-            new String [] {
-                "No.: Cliente", "Nombre", "Dirrección", "Edad"
-            }
-        ));
-     
-    
-     TablaClientes2.setModel(new javax.swing.table.DefaultTableModel(
-           matriz,
-            new String [] {
-                "No.: Cliente", "Nombre", "Dirrección", "Edad"
-            }
-        ));
-    
-        }else{
-        JOptionPane.showMessageDialog(this,"No se ha ingresado ningun cliente!!!");
-        }
-    }
-    
     private void btnListaClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListaClientesActionPerformed
         // TODO add your handling code here:
-        contenidoLista();
     }//GEN-LAST:event_btnListaClientesActionPerformed
 
     private void txtNombrePeliculaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombrePeliculaActionPerformed
@@ -562,53 +847,26 @@ public class formNecflis extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNombrePeliculaActionPerformed
 
     private void btnCrearPeliculaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearPeliculaActionPerformed
-
+        if(txtNombrePelicula.getText().isEmpty()||txtSinopsis.getText().isEmpty()){
+        JOptionPane.showMessageDialog(this,"Completa Todos los Campos");
+        }else{
+              guardarPelicula();
+              limpiarPelicula();
+              tablaPeliculas();
+               }
+       
         // TODO add your handling code here:
-        
-               if(txtNombrePelicula.getText().isEmpty()|| ComboTipo.getSelectedItem().toString().isEmpty()||ComboGenero.getSelectedItem().toString().isEmpty()||txtSinopsis.getText().isEmpty()){
-        JOptionPane.showMessageDialog(this,"Los datos ingresados estan incompletos");
-            }else{
-        cont2++;
-        txtNoPelicula.setText(Integer.toString(cont2));
-        Peliculas Pelicula = new Peliculas(txtNombrePelicula.getText(),ComboTipo.getSelectedItem().toString(),ComboGenero.getSelectedItem().toString(), txtSinopsis.getText(),cont2);
-        listaPeliculas.add(Pelicula);
-        contenidoP();
-        JOptionPane.showMessageDialog(this,"La pelicula a  ha sido Registrada con Exito!!");
-        
-        txtNombrePelicula.setText("");
-        txtSinopsis.setText("");
-        txtNoPelicula.setText("");
-        }
+       
     }//GEN-LAST:event_btnCrearPeliculaActionPerformed
 
     private void btnListaPeliculasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListaPeliculasActionPerformed
         // TODO add your handling code here:
-        contenidoP();
+      
     }//GEN-LAST:event_btnListaPeliculasActionPerformed
 
     private void btnSeleccionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccionarActionPerformed
         // TODO add your handling code here:  //        if(Integer.parseInt(txtNoSeleccion.getText())<lista.size()){
 
-        if(Integer.parseInt(txtNoSeleccion.getText())>lista.size()){
-        JOptionPane.showMessageDialog(this,"El dato ingresado es Incorrecto");
-        }else if(txtNoSeleccion.getText().isEmpty()){
-        JOptionPane.showMessageDialog(this,"Debes ingresar un No.: de Cliente");
-        }else{
-        JOptionPane.showMessageDialog(this,"Cargando Información");
-        j=0;
-        j = Integer.parseInt(txtNoSeleccion.getText())-1;
-         
-        
-        String n, d, e;
-        n = lista.get(j).getNombre();
-        d = lista.get(j).getDireccion();
-        e = lista.get(j).getEdad();
-        txtSeleccion.setText("Identifiador:  "+(j+1)+"\n"+"Nombre:  "+n+"\n"+"Dirección:  "+d+""+"\n"+"Edad:  "+e);
-        z=j;
-        txtNoSeleccion.setText("");
-        j=0; // z este seria el usario correspondiente
-        
-        }
         
     }//GEN-LAST:event_btnSeleccionarActionPerformed
 
@@ -618,85 +876,97 @@ public class formNecflis extends javax.swing.JFrame {
 
     private void btnAgregarPLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarPLActionPerformed
         // TODO add your handling code here:
-        
-        if(txtAgregarPlay.getText().isEmpty()|| Integer.parseInt(txtAgregarPlay.getText())>listaPeliculas.size()){
-        JOptionPane.showMessageDialog(this,"El dato ingresado es Incorrecto");
-        }else {
-        JOptionPane.showMessageDialog(this,"Cargando PlayList");
-        z2 = Integer.parseInt(txtAgregarPlay.getText());
-        z2 = z2-1;
-        JOptionPane.showMessageDialog(this,z+"clientes"+z2+"peliculas");  
-    matrizPlayList[z][z2]=listaPeliculas.get(z2).getNombre(); // fila z2 es peliculas // z es clientes columnas
-    mostrar();
-        }
+          
     }//GEN-LAST:event_btnAgregarPLActionPerformed
 
     
-   public void mostrar(){
-    for(int m11 = 0; m11<lista.size(); m11++){
-    String r=  matrizPlayList[z2][m11];
-    resultado =resultado+ r+" ";
-    txtList.setText(resultado);
-    resultado = "";
-    z2= 0;
-    z = 0;
-     }
-        }
-    
-    
+  
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        
-        mostrar();
-        
+      
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void ComboGeneroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComboGeneroActionPerformed
         // TODO add your handling code here:
+        
+        
     }//GEN-LAST:event_ComboGeneroActionPerformed
-     
-    
-    
-   
-    
-    
-    
-    
-    
-    
-    
-    public void contenidoP(){
-    if(listaPeliculas.size()!=0){
-    String matrizP [][]= new String[listaPeliculas.size()][5];
-    
-    for(int i =0; i<listaPeliculas.size(); i++){
-    matrizP [i][0] = Integer.toString(listaPeliculas.get(i).getNoPelicula());
-    matrizP [i][1] = listaPeliculas.get(i).getNombre();
-    matrizP [i][2] = listaPeliculas.get(i).getTipo();
-    matrizP [i][3] = listaPeliculas.get(i).getGenero();
-    matrizP [i][4] = listaPeliculas.get(i).getsinopsis();
-    }
-    
-    
-    // aqui debe ir la tabla
-TablaPeliculas.setModel(new javax.swing.table.DefaultTableModel(
-            matrizP,
-            new String [] {
-                "No.: Pelicula", "Nombre", "Tipo", "Genero", "Sinopsis"
-            }
-        ));
-    //tabla peliculas seleccion
-    
-    TablaPeliculas2.setModel(new javax.swing.table.DefaultTableModel(
-            matrizP,
-            new String [] {
-                "No.: Pelicula", "Nombre", "Tipo", "Genero", "Sinopsis"
-            }
-        ));
-    }else{
-    JOptionPane.showMessageDialog(this,"No se ha ingresado ninguna pelicula!!!");
-    }
-  }
+
+    private void tablaClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaClientesMouseClicked
+        // TODO add your handling code here:
+        
+        int selecCliente= tablaClientes.rowAtPoint(evt.getPoint());
+        txtNombre.setText(tablaClientes.getValueAt(selecCliente,1).toString());
+        txtDireccion.setText(tablaClientes.getValueAt(selecCliente,2).toString());
+        txtEdad.setText(tablaClientes.getValueAt(selecCliente,3).toString());
+       
+        
+    }//GEN-LAST:event_tablaClientesMouseClicked
+
+    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+        // TODO add your handling code here:
+     modificarCliente();
+     tablaClientes();
+     limpiar();
+    }//GEN-LAST:event_btnModificarActionPerformed
+
+    private void txtNoSeleccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNoSeleccionActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNoSeleccionActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        // TODO add your handling code here:
+        eliminarCliente();
+        tablaClientes();
+        limpiar();
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+        // TODO add your handling code here:
+        tablaClientes();
+        limpiar();
+        
+    }//GEN-LAST:event_btnLimpiarActionPerformed
+
+    private void comboTipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboTipoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboTipoActionPerformed
+
+    private void TablaPeliculasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaPeliculasMouseClicked
+        // TODO add your handling code here:
+        int selecPelicula= TablaPeliculas.rowAtPoint(evt.getPoint());
+        txtNombrePelicula.setText(TablaPeliculas.getValueAt(selecPelicula,1).toString());
+        txtSinopsis.setText(TablaPeliculas.getValueAt(selecPelicula,4).toString());
+      
+       
+        
+    }//GEN-LAST:event_TablaPeliculasMouseClicked
+
+    private void btnModificarPeliculaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarPeliculaActionPerformed
+        // TODO add your handling code here:
+       if(txtNombrePelicula.getText().isEmpty()||txtSinopsis.getText().isEmpty()){
+        JOptionPane.showMessageDialog(this,"COMPLETA TODOS LOS CAMPOS  /n PARA ACTUALIZAR KLOS DATOS DE UNA PELICULA");
+        }else{
+        modificarPelicula();
+        tablaPeliculas();
+        limpiarPelicula();
+                }
+    }//GEN-LAST:event_btnModificarPeliculaActionPerformed
+
+    private void btnEliminarPeliculaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarPeliculaActionPerformed
+        eliminarPelicula();
+        tablaPeliculas();
+        limpiarPelicula();
+// TODO add your handling code here:
+    }//GEN-LAST:event_btnEliminarPeliculaActionPerformed
+
+    private void btnEliminarPelicula1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarPelicula1ActionPerformed
+        // TODO add your handling code here:
+        tablaPeliculas();
+        limpiarPelicula();
+        
+    }//GEN-LAST:event_btnEliminarPelicula1ActionPerformed
+       
     /**
      * @param args the command line arguments
      */
@@ -734,16 +1004,21 @@ TablaPeliculas.setModel(new javax.swing.table.DefaultTableModel(
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> ComboGenero;
-    private javax.swing.JComboBox<String> ComboTipo;
-    private javax.swing.JTable TablaClientes2;
     private javax.swing.JTable TablaPeliculas;
     private javax.swing.JTable TablaPeliculas2;
     private javax.swing.JButton btnAgregarPL;
     private javax.swing.JButton btnCrearPelicula;
+    public static javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnEliminarPelicula;
+    private javax.swing.JButton btnEliminarPelicula1;
+    public static javax.swing.JButton btnLimpiar;
     private javax.swing.JButton btnListaClientes;
     private javax.swing.JButton btnListaPeliculas;
+    private javax.swing.JButton btnModificar;
+    private javax.swing.JButton btnModificarPelicula;
     public static javax.swing.JButton btnNuevoC;
     public static javax.swing.JButton btnSeleccionar;
+    private javax.swing.JComboBox<String> comboTipo;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -771,6 +1046,7 @@ TablaPeliculas.setModel(new javax.swing.table.DefaultTableModel(
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable tablaClientes;
+    private javax.swing.JTable tablaClientes2;
     private javax.swing.JTextField txtAgregarPlay;
     private javax.swing.JTextField txtDireccion;
     private javax.swing.JTextField txtEdad;
