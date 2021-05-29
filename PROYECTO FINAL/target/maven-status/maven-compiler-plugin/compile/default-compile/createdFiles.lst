@@ -4,7 +4,6 @@ app\formNecflis$21.class
 app\MySqlConnector.class
 app\formNecflis$18.class
 app\formNecflis$16.class
-app\formNecflis$2.class
 app\formNecflis$26.class
 app\formNecflis$4.class
 app\formNecflis$7.class
@@ -13,7 +12,6 @@ app\formNecflis$13.class
 app\formNecflis$23.class
 app\formNecflis$14.class
 app\formNecflis$24.class
-app\Clientes.class
 app\formNecflis$31.class
 app\formNecflis$19.class
 app\formNecflis$29.class
@@ -26,12 +24,9 @@ app\formNecflis$22.class
 app\formNecflis.class
 app\formNecflis$12.class
 app\formNecflis$32.class
-app\PeliculaCliente.class
 app\formNecflis$27.class
 app\formNecflis$3.class
-app\Peliculas.class
 app\formNecflis$6.class
-app\formNecflis$1.class
 app\formNecflis$25.class
 app\formNecflis$10.class
 app\formNecflis$15.class
