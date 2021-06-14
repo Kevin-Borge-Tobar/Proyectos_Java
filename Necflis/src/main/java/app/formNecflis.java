@@ -415,6 +415,7 @@ public class formNecflis extends javax.swing.JFrame {
         menu4 = new java.awt.Menu();
         jComboBox1 = new javax.swing.JComboBox<>();
         jComboBox2 = new javax.swing.JComboBox<>();
+        jPanel4 = new javax.swing.JPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         txtEdad = new javax.swing.JTextField();
@@ -472,6 +473,8 @@ public class formNecflis extends javax.swing.JFrame {
         txtAreaSinopsis = new javax.swing.JTextArea();
         jLabel5 = new javax.swing.JLabel();
         btnEliminarPeliPlay = new javax.swing.JButton();
+        jPanel5 = new javax.swing.JPanel();
+        jLabel16 = new javax.swing.JLabel();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -501,6 +504,17 @@ public class formNecflis extends javax.swing.JFrame {
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(49, 171, 49));
@@ -1123,6 +1137,27 @@ public class formNecflis extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("SELECCIONAR CLIENTE", jPanel3);
 
+        jLabel16.setText("jLabel16");
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(180, 180, 180)
+                .addComponent(jLabel16)
+                .addContainerGap(625, Short.MAX_VALUE))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(135, 135, 135)
+                .addComponent(jLabel16)
+                .addContainerGap(420, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("tab4", jPanel5);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -1403,15 +1438,15 @@ public class formNecflis extends javax.swing.JFrame {
     private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnAyuda;
     private javax.swing.JButton btnCrearPelicula1;
-    private javax.swing.JButton btnEliminar;
+    public static javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnEliminarPeliPlay;
     private javax.swing.JButton btnEliminarPelicula;
-    private javax.swing.JButton btnLimpiar;
-    private javax.swing.JButton btnLimpiarCliente;
+    public static javax.swing.JButton btnLimpiar;
+    public static javax.swing.JButton btnLimpiarCliente;
     private javax.swing.JButton btnLimpiarPeli;
     private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnModificarPelicula;
-    private javax.swing.JButton btnNuevoC;
+    public static javax.swing.JButton btnNuevoC;
     private javax.swing.JButton btnPlayList;
     private javax.swing.JButton btnlimpiarPelicula;
     private javax.swing.JComboBox<String> comboGenero;
@@ -1425,6 +1460,7 @@ public class formNecflis extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1436,6 +1472,8 @@ public class formNecflis extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
